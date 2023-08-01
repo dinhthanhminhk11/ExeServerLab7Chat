@@ -33,84 +33,21 @@ async function findMessageUser(req, res) {
   }
 }
 
-
-async function findMessage(req, res) {
-  try {
-    // const data = await Message.find({"sendTo": req.params.id})
-    const data = await Message.find();
-    res.json({
-      data
-    });
-  } catch (error) {
-    res.status(400).json({
-      error
-    });
-  }
-}
-
-
 async function findUser(req, res) {
   try {
-    const data = await user.find();
-    res.json(
-      data
-    );
+    const excludedUserId = req.params.id;
+
+    const data = await user.find({ _id: { $ne: excludedUserId } });
+
+    res.json(data);
   } catch (error) {
     res.status(400).json({
       error
     });
   }
-}
-
-async function findMessageId(req, res) {
-  try {
-    const data = await Message.find({ 'send': req.params.send });
-    res.json({
-      data
-    });
-  } catch (error) {
-    res.status(400).json({
-      error
-    });
-  }
-}
-
-async function findMessageIdSendTo(req, res) {
-  try {
-    console.log(req.params.sendTo);
-    const data = await Message.find({ 'sendTo': req.params.sendTo });
-    res.json({
-      data
-    });
-  } catch (error) {
-    res.status(400).json({
-      error
-    });
-  }
-}
-
-async function findHost(req, res) {
-  try {
-    const data = await user.find({ '_id': req.params.id });
-    res.json({
-      data
-    });
-  } catch (error) {
-    res.status(400).json({
-      error
-    });
-  }
-}
-
-
-function statusMessage(req, res) {
-  req.body.forEach(async (element) => {
-    await Message.findOneAndUpdate({ _id: `${element._id}` }, { $set: { status: true } }, { new: true });
-  });
-  res.json(req.body);
 }
 
 module.exports = {
-  statusMessage, findHost, findMessageId, findUser, findMessage,
-  findMessageUser, addMessage,findMessageIdSendTo
+  findUser,
+  findMessageUser, addMessage
 };
